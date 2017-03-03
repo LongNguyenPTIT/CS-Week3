@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BAN-Dt-5Wz">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Login View Controller-->
+        <scene sceneID="VaG-0i-6nF">
+            <objects>
+                <viewController id="BAN-Dt-5Wz" customClass="LoginViewController" customModule="TwitterClientDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="uML-JJ-KTT"/>
+                        <viewControllerLayoutGuide type="bottom" id="Ozs-lV-a2W"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ROw-9e-mU9">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PQd-U7-oUB">
+                                <rect key="frame" x="88" y="567" width="200" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="EON-a0-jEv"/>
+                                    <constraint firstAttribute="height" constant="50" id="q8k-P4-Rzn"/>
+                                </constraints>
+                                <state key="normal" title="Log in with Twitter">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.63351779509999995" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="onLogin:" destination="BAN-Dt-5Wz" eventType="touchUpInside" id="ij6-qV-NYe"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Twitter_Logo" translatesAutoresizingMaskIntoConstraints="NO" id="WEF-oi-Hbz">
+                                <rect key="frame" x="30" y="30" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="3et-Hy-t7V"/>
+                                    <constraint firstAttribute="height" constant="50" id="V62-hm-bhq"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Twitter" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l4q-Xy-uUG">
+                                <rect key="frame" x="59" y="284" width="230" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="CGt-86-bEu"/>
+                                    <constraint firstAttribute="width" constant="230" id="bF6-Gf-0lz"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="40"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="See what's happening in the world right now" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q2b-W9-5gc">
+                                <rect key="frame" x="59" y="394" width="230" height="47"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.1647058824" green="0.63921568630000003" blue="0.93725490199999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="q2b-W9-5gc" firstAttribute="top" secondItem="l4q-Xy-uUG" secondAttribute="bottom" constant="10" id="0QB-gP-ecd"/>
+                            <constraint firstItem="l4q-Xy-uUG" firstAttribute="leading" secondItem="ROw-9e-mU9" secondAttribute="leadingMargin" constant="43" id="Lha-vl-WVY"/>
+                            <constraint firstItem="l4q-Xy-uUG" firstAttribute="centerY" secondItem="ROw-9e-mU9" secondAttribute="centerY" id="Qjc-5o-yGF"/>
+                            <constraint firstItem="q2b-W9-5gc" firstAttribute="leading" secondItem="l4q-Xy-uUG" secondAttribute="leading" id="dNy-ZD-YNV"/>
+                            <constraint firstItem="WEF-oi-Hbz" firstAttribute="leading" secondItem="ROw-9e-mU9" secondAttribute="leading" constant="30" id="h57-Z0-UlV"/>
+                            <constraint firstItem="PQd-U7-oUB" firstAttribute="centerX" secondItem="ROw-9e-mU9" secondAttribute="centerX" id="pm8-5r-mxq"/>
+                            <constraint firstItem="WEF-oi-Hbz" firstAttribute="top" secondItem="uML-JJ-KTT" secondAttribute="bottom" constant="10" id="pzF-MM-7BK"/>
+                            <constraint firstItem="Ozs-lV-a2W" firstAttribute="top" secondItem="PQd-U7-oUB" secondAttribute="bottom" constant="50" id="sxn-Ue-feD"/>
+                            <constraint firstItem="q2b-W9-5gc" firstAttribute="width" secondItem="l4q-Xy-uUG" secondAttribute="width" id="td8-6c-SsD"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="C3c-JM-8Sy" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-28257" y="189"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Twitter_Logo" width="400" height="400"/>
+    </resources>
+</document>
