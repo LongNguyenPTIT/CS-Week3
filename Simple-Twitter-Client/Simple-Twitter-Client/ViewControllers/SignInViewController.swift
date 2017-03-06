@@ -33,7 +33,9 @@ class SignInViewController: UIViewController {
     }
     */
     @IBAction func onSignIn(_ sender: UIButton) {
-        TwitterClient.shared?.getAccessToken()
+        TwitterClient.shared?.authSuccess(completion: { (error: NSError?) in
+            
+        })
         
         
     }

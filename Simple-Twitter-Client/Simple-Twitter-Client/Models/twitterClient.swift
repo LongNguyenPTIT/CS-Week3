@@ -18,35 +18,52 @@ class TwitterClient: BDBOAuth1SessionManager {
     let API_REQUEST_TOKEN = "/oauth/request_token"
     let API_AUTHENTICATE_TOKEN = "/oauth/authenticate?oauth_token="
     let API_ACCESS_TOKEN = "/oauth/access_token"
-    let twitterToken = ""
-    let twitterTokenSecret = ""
+    let API_GET_CURRENT_ACCOUNT = "1.1/account/verify_credentials.json"
+    
+    var currentUser: User?
+    
+    
+
     
     static let shared = TwitterClient(baseURL: URL(string: "https://api.twitter.com"),
                                       consumerKey: "gTPRGiXBqqhFW9xJqfm1NXtKE",
                                       consumerSecret: "lU00jv82tBHDHjZY9BX3NhGgAROjVzzykZde6OXT8n7iiSqshv")
     
     
-    func getAccessToken() {
+    func authSuccess(completion: @escaping (_ error: NSError?) -> ()) {
         TwitterClient.shared?.deauthorize()
-        TwitterClient.shared?.fetchRequestToken(withPath: API_REQUEST_TOKEN,
-                                                method: "GET",
-                                                callbackURL: URL(string: "simpleTwitter://"),
-                                                scope: nil,
-                                                success: { (request: BDBOAuth1Credential?) in
-                                                    let authURL = URL(string: "\(self.endPoint)\(self.API_AUTHENTICATE_TOKEN)\(request!.token!)")!
-                                                    UIApplication.shared.open(authURL, options: [:], completionHandler: nil)
+        
+        TwitterClient.shared?.fetchRequestToken(withPath: API_REQUEST_TOKEN, method: "GET", callbackURL: URL(string: "simpleTwitter://"), scope: nil, success: { (request: BDBOAuth1Credential?) in
+            
+            let authURL = URL(string: "\(self.endPoint)\(self.API_AUTHENTICATE_TOKEN)\(request!.token!)")!
+            UIApplication.shared.open(authURL, options: [:], completionHandler: nil)
+            print("Got the request token\n")
+            
+            
                                                     
         },failure: { (error: Error?) in
-            print(">>> Error: \(error?.localizedDescription)")
+            print(">>> Error getting the request token: \(error?.localizedDescription)\n")
+            completion(error as NSError?)
+            
+        })
+    }
+    
+    func getCurrentUser() {
+        TwitterClient.shared?.get(API_GET_CURRENT_ACCOUNT, parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            TwitterClient.shared?.currentUser = User(dictionary: response as! NSDictionary)
+            print(">>>>>DEBUG user \n \(response)")
+        }, failure: { (task: URLSessionDataTask?, error: Error?) in
+            print("error getting current user")
         })
     }
     
     func handleOpenURL(url: URL) {
         let requestToken = BDBOAuth1Credential(queryString: url.query)
-        TwitterClient.shared?.fetchAccessToken(withPath: API_ACCESS_TOKEN,
-                                               method: "POST",
-                                               requestToken: requestToken, success: { (accessToken: BDBOAuth1Credential?) in
-                                                print("login success !!!")
+        TwitterClient.shared?.fetchAccessToken(withPath: API_ACCESS_TOKEN, method: "POST", requestToken: requestToken, success: { (accessToken: BDBOAuth1Credential?) in
+            print("Got the access token !!!")
+            TwitterClient.shared?.requestSerializer.saveAccessToken(accessToken)
+            self.getCurrentUser()
+            
         }, failure: { (error: Error?) in
             print(">>> Error: \(error?.localizedDescription)")
         })
