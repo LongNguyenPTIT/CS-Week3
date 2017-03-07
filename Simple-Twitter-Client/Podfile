@@ -8,4 +8,5 @@ target 'Simple-Twitter-Client' do
   # Pods for Simple-Twitter-Client
   	pod 'BDBOAuth1Manager' , '2.0.0'
 	pod 'Alamofire', '~> 4.0'
+    
 end

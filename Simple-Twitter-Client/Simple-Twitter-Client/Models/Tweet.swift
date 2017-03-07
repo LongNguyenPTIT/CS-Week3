@@ -26,6 +26,7 @@ class Tweet: NSObject {
     var isRetweeted = false
     var isFavorited = false
     var images = [NSURL]()
+    var profileImgUrl: URL?
     var retweet: Tweet?
     
     
@@ -47,11 +48,16 @@ class Tweet: NSObject {
         formatter.dateFormat = "EEE MMM d HH:mm:ss Z y"
         createdAt = formatter.date(from: createdAtString!) as NSDate?
         
+        
         retweetCount = dictionary["retweet_count"] as? Int ?? 0
         favoriteCount = dictionary["favorite_count"] as? Int ?? 0
         
         isRetweeted = (dictionary["retweeted"] as? Bool!)!
         isFavorited = (dictionary["favorited"] as? Bool!)!
+        
+        if let imgUrl = dictionary.value(forKeyPath: "user.profile_image_url_https") as? String {
+            profileImgUrl = URL(string: imgUrl)
+        }
         
         var url = ""
         if let media = dictionary.value(forKeyPath: "extended_entities.media") as? [NSDictionary] {

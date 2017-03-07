@@ -8,7 +8,8 @@
 
 
 import UIKit
-import AFNetworking
+import Alamofire
+
 
 class TweetCell: UITableViewCell {
     
@@ -52,9 +53,32 @@ class TweetCell: UITableViewCell {
     
     var tweet: Tweet! {
         didSet {
+            nameLabel.text = tweet.user?.name
+            retweetCountLabel.text = String(tweet.retweetCount)
+            favoriteCountLabel.text = String(tweet.favoriteCount)
+            retweetCountLabel.text = String(tweet.retweetCount)
+            screenNameLabel.text = tweet.replyToScreenName
+            contentLabel.text = tweet.text
+            var formatter = DateFormatter()
+            formatter.dateFormat = "dd/MM/yyyy hh:mm"
             
-            let retweetedConstraints = [topIconHeightConstraint, topLabelHeightConstraint]
-            let imagesViewConstraints = [imagesViewHeightConstraint]
+            createdAtLabel.text = formatter.string(from: tweet.createdAt as! Date)
+            
+            if let profileImgUrl = tweet.profileImgUrl {
+                Alamofire.request(profileImgUrl).response { response in
+                    if let data = response.data {
+                        self.profileImage.image = UIImage(data: data)
+                    } else {
+                        print("Data is nil. I don't know what to do :(")
+                    }
+                }
+            }
+            
+            
+            
+            
+//            let retweetedConstraints = [topIconHeightConstraint, topLabelHeightConstraint]
+//            let imagesViewConstraints = [imagesViewHeightConstraint]
             
 //            TwitterHelper.sharedInstance.setDetail(tweet, topLabel: topLabel, topIcon: topIcon, nameLabel: nameLabel, screenNameLabel: screenNameLabel, createdAtLabel: createdAtLabel, contentLabel: contentLabel, profileImage: profileImage, retweetCountLabel: retweetCountLabel, favoriteCountLabel: favoriteCountLabel, retweetButton: retweetButton, favoriteButton: favoriteButton, imagesView: imagesView, retweetedConstraints: retweetedConstraints, imagesViewConstraints: imagesViewConstraints, isDetailView: false)
         }
