@@ -37,9 +37,9 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="twitterlogo" translatesAutoresizingMaskIntoConstraints="NO" id="WEF-oi-Hbz">
-                                <rect key="frame" x="30" y="30" width="50" height="50"/>
+                                <rect key="frame" x="30" y="30" width="60" height="50"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="3et-Hy-t7V"/>
+                                    <constraint firstAttribute="width" constant="60" id="3et-Hy-t7V"/>
                                     <constraint firstAttribute="height" constant="50" id="V62-hm-bhq"/>
                                 </constraints>
                             </imageView>
@@ -74,7 +74,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <segue destination="0up-kV-O68" kind="presentation" id="wc2-hf-j5J"/>
+                        <segue destination="0up-kV-O68" kind="presentation" identifier="loginSegue" id="wc2-hf-j5J"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C3c-JM-8Sy" sceneMemberID="firstResponder"/>
@@ -290,7 +290,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="compose" id="Ygd-Rp-TBq"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="tableView" destination="mot-93-LOp" id="Bja-Ec-8M6"/>
+                        <outlet property="tableView" destination="mot-93-LOp" id="Rgu-bB-YED"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pM4-oq-Se7" userLabel="First Responder" sceneMemberID="firstResponder"/>

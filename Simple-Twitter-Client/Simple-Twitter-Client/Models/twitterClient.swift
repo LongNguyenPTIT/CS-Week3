@@ -23,6 +23,7 @@ class TwitterClient: BDBOAuth1SessionManager {
     
     
     var currentUser: User?
+    var loginCompletion: ((_ user: User?, _ error: NSError?) -> ())?
     
     
 
@@ -32,7 +33,8 @@ class TwitterClient: BDBOAuth1SessionManager {
                                       consumerSecret: "lU00jv82tBHDHjZY9BX3NhGgAROjVzzykZde6OXT8n7iiSqshv")
     
     
-    func authSuccess(completion: @escaping (_ error: NSError?) -> ()) {
+    func loginSuccess(completion: @escaping (_ user: User?, _ error: NSError?) -> ()) {
+        loginCompletion = completion
         TwitterClient.shared?.deauthorize()
         
         TwitterClient.shared?.fetchRequestToken(withPath: API_REQUEST_TOKEN, method: "GET", callbackURL: URL(string: "simpleTwitter://"), scope: nil, success: { (request: BDBOAuth1Credential?) in
@@ -45,7 +47,7 @@ class TwitterClient: BDBOAuth1SessionManager {
                                                     
         },failure: { (error: Error?) in
             print(">>> Error getting the request token: \(error?.localizedDescription)\n")
-            completion(error as NSError?)
+            completion(nil, error as! NSError)
             
         })
     }
@@ -54,8 +56,11 @@ class TwitterClient: BDBOAuth1SessionManager {
         TwitterClient.shared?.get(API_GET_CURRENT_ACCOUNT, parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
             TwitterClient.shared?.currentUser = User(dictionary: response as! NSDictionary)
             print(">>>>>DEBUG user \n \(response)")
+            self.loginCompletion!(TwitterClient.shared?.currentUser, nil)
         }, failure: { (task: URLSessionDataTask?, error: Error?) in
             print("error getting current user")
+            self.loginCompletion!(nil, error as NSError?)
+            
         })
     }
     
@@ -82,8 +87,10 @@ class TwitterClient: BDBOAuth1SessionManager {
             TwitterClient.shared?.requestSerializer.saveAccessToken(accessToken)
             self.getCurrentUser()
             
+            
         }, failure: { (error: Error?) in
             print(">>> Error: \(error?.localizedDescription)")
+            self.loginCompletion!(nil, error as NSError?)
         })
         
     }
