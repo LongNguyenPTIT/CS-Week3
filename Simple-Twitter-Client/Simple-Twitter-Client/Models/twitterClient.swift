@@ -19,6 +19,8 @@ class TwitterClient: BDBOAuth1SessionManager {
     let API_AUTHENTICATE_TOKEN = "/oauth/authenticate?oauth_token="
     let API_ACCESS_TOKEN = "/oauth/access_token"
     let API_GET_CURRENT_ACCOUNT = "1.1/account/verify_credentials.json"
+    let API_GET_STATUS_HOME_TIMELINE = "1.1/statuses/home_timeline.json"
+    
     
     var currentUser: User?
     
@@ -54,6 +56,22 @@ class TwitterClient: BDBOAuth1SessionManager {
             print(">>>>>DEBUG user \n \(response)")
         }, failure: { (task: URLSessionDataTask?, error: Error?) in
             print("error getting current user")
+        })
+    }
+    
+    func logOut() {
+        TwitterClient.shared?.currentUser = nil
+        deauthorize()
+    }
+    
+    
+    func getHomeTimeline(completion: @escaping ([Tweet]?, Error?) -> ()) {
+        TwitterClient.shared?.get(API_GET_STATUS_HOME_TIMELINE, parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            let tweets = Tweet.tweetWithArray(data: response as! [NSDictionary])
+            completion(tweets, nil)
+        }, failure: { (task: URLSessionDataTask?, error: Error) in
+            print("error getting home timeline")
+            completion(nil, error)
         })
     }
     
