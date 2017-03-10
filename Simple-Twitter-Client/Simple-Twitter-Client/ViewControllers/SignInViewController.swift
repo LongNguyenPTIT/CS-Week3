@@ -35,6 +35,7 @@ class SignInViewController: UIViewController {
     @IBAction func onSignIn(_ sender: UIButton) {
         TwitterClient.shared?.loginSuccess(completion: { (user: User?, error: NSError?) in
             if user != nil {
+                TwitterClient.shared?.currentUser = user
                 self.performSegue(withIdentifier: "loginSegue", sender: self)
             } else {
                 print("login fail")

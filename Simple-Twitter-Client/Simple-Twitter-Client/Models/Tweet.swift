@@ -9,82 +9,90 @@
 import Foundation
 
 class Tweet: NSObject {
-    var id: NSNumber?
+    var user: User?
+//    var profileImgUrl: NSURL?
+    var retweetBy: String?
+//    var screenName:String?
+//    var profileName: String?
+    
+    var id_str: String?
+    var createdAt: String?
     var text: String?
-    var createdAt: NSDate?
+    
     var retweetCount: Int = 0
     var favoriteCount: Int = 0
-    
-    
-    var user: User?
-    var replyToStatusId: NSNumber?
-    var replyToScreenName: String?
-    
-    var createdAtString: String?
-    
-    
     var isRetweeted = false
     var isFavorited = false
-    var images = [NSURL]()
-    var profileImgUrl: URL?
+    
+    
+
+    
     var retweet: Tweet?
     
     
     
     
-    init(dictionary: NSDictionary) {
+    init(data: NSDictionary) {
+        if let retweetedStatus = data["retweeted_status"] as? NSDictionary {
+            retweetBy = (data.value(forKey: "user") as! NSDictionary).value(forKey: "name") as! String?
+            
+            
+            
+            text = retweetedStatus.value(forKey: "text") as! String?
+            favoriteCount = (retweetedStatus.value(forKey: "favorite_count") as! Int?)!
+            retweetCount = (retweetedStatus.value(forKey: "retweet_count") as! Int?)!
+            id_str = retweetedStatus.value(forKey: "id_str") as! String?
+            user = User(dictionary: retweetedStatus.value(forKey: "user") as! NSDictionary)
+            isRetweeted = true
+            
+            
+//            screenName = user?.screenName
+//            profileName = user?.name
+//            profileUrl = user?.profileUrl
+            
+            //            let dateString = retweetedStatus.value(forKey: "created_at") as! String?
+            //            let formatter = DateFormatter()
+            //            formatter.dateFormat = "EEE MMM d HH:mm::ss Z y"
+            //            if let timestampString = dateString {
+            //                let sinceDate = formatter.date(from: timestampString)
+            //                formatter.dateFormat = "dd/MM/yyyy hh:mm"
+            //                createdAt = formatter.string(from: sinceDate!)
+            //            }
+        }else {
+            id_str = data["id_str"] as? String
+            text = data["text"] as! String?
+            retweetCount = (data["retweet_count"] as? Int) ?? 0
+            favoriteCount = (data["favorite_count"] as? Int) ?? 0
+            user = User(dictionary: data["user"] as! NSDictionary)
+//            profileUrl = user?.profileUrl
+//            screenName = user?.screenName
+//            profileName = user?.name
+            
+        }
         
-        id = dictionary["id"] as? NSNumber!
         
-        user = User(dictionary: dictionary["user"] as! NSDictionary)
         
-        replyToStatusId = dictionary["in_reply_to_status_id"] as? NSNumber!
-        replyToScreenName = dictionary["in_reply_to_screen_name"] as? String!
         
-        text = dictionary["text"] as? String!
-        createdAtString = dictionary["created_at"] as? String!
         
-        var formatter = DateFormatter()
+        
+        isFavorited = data["favorited"] as! Bool
+        isRetweeted = data["retweeted"] as! Bool
+        let dateString = data["created_at"] as? String
+        let formatter = DateFormatter()
         formatter.dateFormat = "EEE MMM d HH:mm:ss Z y"
-        createdAt = formatter.date(from: createdAtString!) as NSDate?
         
         
-        retweetCount = dictionary["retweet_count"] as? Int ?? 0
-        favoriteCount = dictionary["favorite_count"] as? Int ?? 0
-        
-        isRetweeted = (dictionary["retweeted"] as? Bool!)!
-        isFavorited = (dictionary["favorited"] as? Bool!)!
-        
-        if let imgUrl = dictionary.value(forKeyPath: "user.profile_image_url_https") as? String {
-            profileImgUrl = URL(string: imgUrl)
+        if let timestampString = dateString {
+            let sinceDate = formatter.date(from: timestampString)
+            formatter.dateFormat = "dd/MM/yyyy hh:mm"
+            createdAt = formatter.string(from: sinceDate!)
         }
-        
-        var url = ""
-        if let media = dictionary.value(forKeyPath: "extended_entities.media") as? [NSDictionary] {
-            for image in media {
-                if let urlString = image["media_url"] as? String {
-                    images.append(NSURL(string: urlString)!)
-                }
-                url = (image["url"] as? String)!
-            }
-        }
-        
-        // Remove url at the end of text (in case this tweet has images)
-//        if !url.isEmpty {
-//            text = text?.replace(url, withString: "")
-//            text = text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-//        }
-//        
-        if let retweetDictionary = dictionary["retweeted_status"] as? NSDictionary {
-            retweet = Tweet(dictionary: retweetDictionary)
-        }
-        
     }
     
     class func tweetWithArray(data: [NSDictionary]) -> [Tweet] {
         var tweets = [Tweet]()
         for item in data {
-            tweets.append(Tweet(dictionary: item))
+            tweets.append(Tweet(data: item))
         }
         return tweets
     }

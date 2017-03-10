@@ -12,11 +12,30 @@ class TweetViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     var tweets = [Tweet]()
+    let refreshControl = UIRefreshControl()
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         loadData()
         tableView.delegate = self
         tableView.dataSource = self
+        
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 120
+        
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
+        tableView.insertSubview(refreshControl, at: 0)
 
         // Do any additional setup after loading the view.
     }
@@ -24,6 +43,10 @@ class TweetViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        loadData()
     }
     
     func loadData() {
@@ -35,16 +58,6 @@ class TweetViewController: UIViewController {
             self.tableView.reloadData()
             
         })
-        
-//        TwitterClient.sharedInstance.homeTimelineWithParams(nil, maxId: nil, completion: { (tweets, error) -> () in
-//            self.tweets = tweets!
-//            for tweet in self.tweets {
-//                println("text: \(tweet.text), created: \(tweet.createdAt)")
-//            }
-//            self.tableView.reloadData()
-//        })
-//        
-//        refreshControl?.endRefreshing()
     }
     
 
@@ -57,43 +70,45 @@ class TweetViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    @IBAction func onSignOut(_ sender: UIBarButtonItem) {
+        TwitterClient.shared?.logOut()
+        NotificationCenter.default.post(name: NSNotification.Name("userDidlogoutNofi"), object: nil)
+        
+    }
+    
+    
+    
+    
+    func refreshControlAction(_ refreshControl: UIRefreshControl) {
+        TwitterClient.shared?.getHomeTimeline(completion: { (tweets: [Tweet]?, error: Error?) in
+            if let data =  tweets {
+                self.tweets = data
+            }
+            
+            self.tableView.reloadData()
+            refreshControl.endRefreshing()
+        })
+    }
 
 }
 
-extension TweetViewController: UITableViewDelegate, UITableViewDataSource {
+
+
+
+// MARK: - Table Delegate, DataSource
+extension TweetViewController: UITableViewDelegate, UITableViewDataSource  {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tweets.count
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell", for: indexPath) as! TweetCell
-        
-        cell.tweet = tweets[indexPath.row]
-        
-        cell.contentLabel.numberOfLines = 0
-        cell.contentLabel.sizeToFit()
-        
-        if indexPath.row == tweets.count - 1 {
-            
-//            loadingView.startAnimating()
-//            notificationLabel.hidden = true
-//            getMoreTweets()
-            
-        } else {
-//            loadingView.stopAnimating()
-        }
-        
-//        if indexPath.row % 2 == 0 {
-//            cell.backgroundColor = UIColor(red: 222/255, green: 243/255, blue: 255/255, alpha: 1.0)
-//        } else {
-//            cell.backgroundColor = UIColor.whiteColor()
-//        }
-        
-        // Set full width for the separator
-//        cell.layoutMargins = UIEdgeInsetsZero
-//        cell.preservesSuperviewLayoutMargins = false
-//        cell.separatorInset = UIEdgeInsetsZero
-//        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell") as! TweetCell
+        cell.tweetItem = tweets[indexPath.row]
         return cell
     }
+    
+    func didFinishUpdate() {
+        refreshControlAction(refreshControl)
+    }
+    
 }
