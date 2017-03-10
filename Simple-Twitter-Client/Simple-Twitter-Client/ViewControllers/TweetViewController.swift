@@ -96,7 +96,7 @@ class TweetViewController: UIViewController {
 
 
 // MARK: - Table Delegate, DataSource
-extension TweetViewController: UITableViewDelegate, UITableViewDataSource  {
+extension TweetViewController: UITableViewDelegate, UITableViewDataSource, TweetCellDelegate  {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tweets.count
     }
@@ -104,6 +104,7 @@ extension TweetViewController: UITableViewDelegate, UITableViewDataSource  {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell") as! TweetCell
         cell.tweetItem = tweets[indexPath.row]
+        cell.delegate = self
         return cell
     }
     
@@ -111,4 +112,12 @@ extension TweetViewController: UITableViewDelegate, UITableViewDataSource  {
         refreshControlAction(refreshControl)
     }
     
+    func onRetweet() {
+        loadData()
+        
+    }
+    
+    func onFavorite() {
+        loadData()
+    }
 }

@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol TweetCellDelegate {
+    func onRetweet ()
+    func onFavorite ()
+}
 
 class TweetCell: UITableViewCell {
     
@@ -31,6 +35,9 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var favoriteCountLabel: UILabel!
     @IBOutlet weak var retweetCountLabel: UILabel!
     
+    var tweetId: String = ""
+    var delegate: TweetCellDelegate!
+    
     
     var tweetItem: Tweet? {
         didSet {
@@ -40,6 +47,7 @@ class TweetCell: UITableViewCell {
             tweetTextLabel.text = self.tweetItem?.text as String?
             userNameLabel.text = "@\(self.tweetItem!.user!.screenName!)"
             profileLabel.text = self.tweetItem?.user?.name
+            tweetId = (tweetItem?.id_str)!
             
             if let retweet = tweetItem!.retweetBy {
                 retweetLabel.text = "\(retweet) Retweeted"
@@ -70,14 +78,14 @@ class TweetCell: UITableViewCell {
     @IBAction func onRetweet(_ sender: UIButton) {
         if retweetActionImage.isSelected {
             retweetActionImage.isSelected = false
-            
-            
-            
         }else {
             retweetActionImage.isSelected = true
-            
-            
         }
+        TwitterClient.shared?.handleRetweet(tweetId: tweetId, isRetweet: retweetActionImage.isSelected, completion: { (response, error) in
+            if error == nil {
+                self.delegate.onRetweet()
+            }
+        })
         
     }
     
@@ -87,6 +95,12 @@ class TweetCell: UITableViewCell {
         } else {
             favoriteActionImage.isSelected = true
         }
+        
+        TwitterClient.shared?.handleFavorite(tweetId: tweetId, isFavorite: favoriteActionImage.isSelected, completion: { (response, error) in
+            if error == nil {
+                self.delegate.onFavorite()
+            }
+        })
     }
     
     

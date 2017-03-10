@@ -21,6 +21,8 @@ class TwitterClient: BDBOAuth1SessionManager {
     let API_GET_CURRENT_ACCOUNT = "1.1/account/verify_credentials.json"
     let API_GET_STATUS_HOME_TIMELINE = "1.1/statuses/home_timeline.json"
     let API_POST_NEW_STATUS = "1.1/statuses/update.json"
+    let API_POST_NEW_FAVORITE = "1.1/favorites/create.json"
+    let API_POST_DETROY_FAVORITE = "1.1/favorites/destroy.json"
     
     
     
@@ -118,14 +120,55 @@ class TwitterClient: BDBOAuth1SessionManager {
             completion(nil, error as NSError?)
             print("update status fail")
         })
-
         
+    }
+    
+    func handleFavorite(tweetId: String, isFavorite: Bool, completion: @escaping (_ response: Any?, _ error: NSError?) -> ()) {
+        var params = [String : String]()
+        params["id"] = tweetId
         
+        if isFavorite {
+            post(API_POST_NEW_FAVORITE, parameters: params, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+                completion(response, nil)
+                print("Favorited!")
+                
+            }) { (operation: URLSessionDataTask?, error: Error) in
+                print("Favorite error")
+            }
+        }else {
+            post(API_POST_DETROY_FAVORITE, parameters: params, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+                completion(response, nil)
+                print("Detroy Favorite!")
+            }, failure: { (task: URLSessionDataTask?, error: Error) in
+                print("Detroy Favorite error")
+            })
+        }
         
+    }
+    
+    
+    
+    
+    func handleRetweet(tweetId: String, isRetweet: Bool, completion: @escaping (_ response: Any?, _ error: NSError?) -> ()) {
+        var params = [String : String]()
+        params["id"] = tweetId
         
-        
-
-        
+        if isRetweet {
+            post("1.1/statuses/retweet/\(tweetId).json", parameters: params, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+                completion(response, nil)
+                print("Retweeded!")
+                
+            }) { (operation: URLSessionDataTask?, error: Error) in
+                print("Retweeded error")
+            }
+        }else {
+            post("1.1/statuses/unretweet/\(tweetId).json", parameters: params, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+                completion(response, nil)
+                print("Detroy Unretweed!")
+            }, failure: { (task: URLSessionDataTask?, error: Error) in
+                print("Detroy Unretweed error")
+            })
+        }
     }
     
     
