@@ -21,7 +21,9 @@ class NewTweetViewController: UIViewController {
     @IBOutlet weak var tweetButton: UIButton!
     
     
+    @IBOutlet weak var countCharacterLabel: UILabel!
     
+    var countCharactor = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,13 +59,35 @@ class NewTweetViewController: UIViewController {
     }
     
 
+    
+
 }
 
 extension NewTweetViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if newTweetTextField.text.contains("What's happening?") {
             newTweetTextField.text = ""
+            countCharactor = 0
+            tweetButton.isEnabled = false
         }
+    }
+    func textViewDidChange(_ textView: UITextView) {
+        countCharactor = newTweetTextField.text.characters.count
+        if newTweetTextField.text == "" {
+            tweetButton.isEnabled = false
+        } else {
+            tweetButton.isEnabled = true
+        }
+        
+        if newTweetTextField.text.characters.count >= 140 {
+            countCharactor = 140
+            tweetButton.isEnabled = false
+        }else {
+            tweetButton.isEnabled = true
+        }
+        countCharacterLabel.text = "\(140 - countCharactor)"
+        
+        
     }
     
 }

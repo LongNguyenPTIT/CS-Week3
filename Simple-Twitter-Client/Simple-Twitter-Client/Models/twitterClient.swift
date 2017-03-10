@@ -11,7 +11,7 @@ import BDBOAuth1Manager
 
 
 
-let twitterBaseURL = NSURL(string: "https://api.twitter.com")
+
 class TwitterClient: BDBOAuth1SessionManager {
     
     let endPoint = "https://api.twitter.com"
@@ -58,9 +58,9 @@ class TwitterClient: BDBOAuth1SessionManager {
     
 
     
-    static let shared = TwitterClient(baseURL: twitterBaseURL as URL!,
-                                      consumerKey: "Hn3NfUEx5Zv2YdGgu2j0LEJA1",
-                                      consumerSecret: "hyRhQUyDoDrBn2uOh9lWPJA8xS0olHBHMq6SoRWWaMFjfyAhIx")
+    static let shared = TwitterClient(baseURL: URL(string: "https://api.twitter.com"),
+                                      consumerKey: "gTPRGiXBqqhFW9xJqfm1NXtKE",
+                                      consumerSecret: "lU00jv82tBHDHjZY9BX3NhGgAROjVzzykZde6OXT8n7iiSqshv")
     
     
     func loginSuccess(completion: @escaping (_ user: User?, _ error: NSError?) -> ()) {

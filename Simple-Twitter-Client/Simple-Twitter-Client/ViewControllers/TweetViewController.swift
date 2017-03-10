@@ -89,6 +89,29 @@ class TweetViewController: UIViewController {
             refreshControl.endRefreshing()
         })
     }
+    
+    
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "detailSegue" {
+            let cell = sender as! TweetCell
+            let indexPath = tableView.indexPath(for: cell)
+            let tweet = tweets[(indexPath?.row)!]
+            
+            let navigation = segue.destination as! UINavigationController
+            let destVC = navigation.topViewController as! TweetDetailViewController
+            
+            
+            destVC.tweetItem = tweet
+            destVC.delegate = self
+            
+
+            
+            
+            
+        }
+    }
 
 }
 
@@ -96,7 +119,7 @@ class TweetViewController: UIViewController {
 
 
 // MARK: - Table Delegate, DataSource
-extension TweetViewController: UITableViewDelegate, UITableViewDataSource, TweetCellDelegate  {
+extension TweetViewController: UITableViewDelegate, UITableViewDataSource, TweetCellDelegate, TweetDetailViewControllerDelegate  {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tweets.count
     }
@@ -120,4 +143,13 @@ extension TweetViewController: UITableViewDelegate, UITableViewDataSource, Tweet
     func onFavorite() {
         loadData()
     }
+    
+    func onRetweetTweetDetail() {
+        loadData()
+    }
+    func onFavoriteTweetDetail() {
+        loadData()
+    }
+    
+    
 }

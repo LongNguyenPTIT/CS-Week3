@@ -82,9 +82,9 @@ class TweetCell: UITableViewCell {
             retweetActionImage.isSelected = true
         }
         TwitterClient.shared?.handleRetweet(tweetId: tweetId, isRetweet: retweetActionImage.isSelected, completion: { (response, error) in
-            if error == nil {
+            
                 self.delegate.onRetweet()
-            }
+            
         })
         
     }
@@ -97,16 +97,16 @@ class TweetCell: UITableViewCell {
         }
         
         TwitterClient.shared?.handleFavorite(tweetId: tweetId, isFavorite: favoriteActionImage.isSelected, completion: { (response, error) in
-            if error == nil {
+            
                 self.delegate.onFavorite()
-            }
+            
         })
     }
     
     
     
     
-    @IBOutlet weak var onTweet: UIButton!
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
